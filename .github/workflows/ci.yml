@@ -1,0 +1,97 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+
+      - name: Lint
+        run: python -m ruff check .
+
+      - name: Test
+        # No AWS credentials and no API key: DynamoDB is mocked and the provider
+        # is the local `echo` adapter. If this job ever needs a secret, something
+        # has leaked into the test path.
+        run: python -m pytest --cov=src --cov-report=term-missing
+
+      - name: Demo runs end to end
+        run: python bench/demo.py
+
+      - name: Cache benchmark runs
+        run: python bench/replay.py --queries bench/queries.sample.jsonl
+
+  test-real-dynamodb:
+    # The same assertions against a real DynamoDB rather than moto. This job is
+    # the one that makes the mock trustworthy: the conditional-update guardrail
+    # and the Decimal ledger are exactly what a mock can get subtly wrong, and a
+    # green moto run alone would never reveal it.
+    runs-on: ubuntu-latest
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local:latest
+        ports:
+          - 8000:8000
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+
+      - name: Wait for DynamoDB Local
+        env:
+          AWS_ENDPOINT_URL_DYNAMODB: http://localhost:8000
+        run: python scripts/local_setup.py --endpoint http://localhost:8000
+
+      - name: Test against real DynamoDB
+        env:
+          AWS_ENDPOINT_URL_DYNAMODB: http://localhost:8000
+          AWS_ACCESS_KEY_ID: local
+          AWS_SECRET_ACCESS_KEY: local
+          AWS_DEFAULT_REGION: us-east-1
+        run: python -m pytest
+
+      - name: Demo against real DynamoDB
+        env:
+          AWS_ENDPOINT_URL_DYNAMODB: http://localhost:8000
+          AWS_ACCESS_KEY_ID: local
+          AWS_SECRET_ACCESS_KEY: local
+          AWS_DEFAULT_REGION: us-east-1
+        run: python bench/demo.py
+
+  validate-template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install cfn-lint
+        run: python -m pip install cfn-lint
+      - name: Lint the SAM template
+        # Catches a malformed template before a deploy does.
+        run: cfn-lint template.yaml --ignore-checks W

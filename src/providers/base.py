@@ -30,10 +30,11 @@ class ChatResponse:
     raw: dict = field(default_factory=dict,repr=False)
 
 class ProviderError(RuntimeError):
-    def __int__(self,message:str,status:int=502)-> None:
-        super().__init__(message)
-        self.status=status
+    """Raised when an upstream provider fails in a way the caller should see."""
 
+    def __init__(self, message: str, status: int = 502) -> None:
+        super().__init__(message)
+        self.status = status
 class Provider(abc.ABC):
     "Backend can answer a Chat req"
     name:str="abstract"

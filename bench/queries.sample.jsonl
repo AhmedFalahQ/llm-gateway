@@ -1,0 +1,24 @@
+{"id": "q01", "group": "refund_window", "prompt": "What is your refund window for online orders?"}
+{"id": "q02", "group": "refund_window", "prompt": "How long is the refund window for orders placed online?"}
+{"id": "q03", "group": "refund_window", "prompt": "What is your refund window for online orders?"}
+{"id": "q04", "group": "shipping_time", "prompt": "How many days does standard shipping take?"}
+{"id": "q05", "group": "shipping_time", "prompt": "How many days will standard shipping take?"}
+{"id": "q06", "group": "shipping_time", "prompt": "What is the delivery estimate for standard shipping in days?"}
+{"id": "q07", "group": "password_reset", "prompt": "How do I reset my account password?"}
+{"id": "q08", "group": "password_reset", "prompt": "How do I reset the password on my account?"}
+{"id": "q09", "group": "invoice_download", "prompt": "Where can I download my invoice?"}
+{"id": "q10", "group": "invoice_download", "prompt": "Where do I download my invoice from?"}
+{"id": "q11", "group": "invoice_download", "prompt": "Can I download my invoice as a PDF?"}
+{"id": "q12", "group": "cancel_subscription", "prompt": "How do I cancel my subscription?"}
+{"id": "q13", "group": "cancel_subscription", "prompt": "How do I cancel the subscription?"}
+{"id": "q14", "group": "api_rate_limit", "prompt": "What is the API rate limit per minute?"}
+{"id": "q15", "group": "api_rate_limit", "prompt": "What is the per minute API rate limit?"}
+{"id": "q16", "group": "api_rate_limit", "prompt": "How many API requests per minute are allowed?"}
+{"id": "q17", "group": "ar_refund_window", "prompt": "ما هي مدة استرجاع الطلبات التي تم شراؤها عبر الإنترنت؟"}
+{"id": "q18", "group": "ar_refund_window", "prompt": "ما هي مدة استرجاع الطلبات التي تم شراؤها عبر الانترنت"}
+{"id": "q19", "group": "ar_shipping_time", "prompt": "كم عدد الأيام التي يستغرقها الشحن العادي؟"}
+{"id": "q20", "group": "ar_shipping_time", "prompt": "كم عدد الأيام التي يستغرقها الشحن العادي"}
+{"id": "q21", "group": "ar_invoice", "prompt": "من أين يمكنني تحميل الفاتورة؟"}
+{"id": "q22", "group": "ar_invoice", "prompt": "من أين أستطيع تحميل الفاتورة؟"}
+{"id": "q23", "group": "office_hours", "prompt": "What are your support hours on weekends?"}
+{"id": "q24", "group": "warranty_length", "prompt": "How long is the hardware warranty?"}

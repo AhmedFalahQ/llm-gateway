@@ -1,0 +1,22 @@
+# DynamoDB Local for development.
+#
+#   make local-up      start it
+#   make local-init    create the tables
+#   make local-test    run the suite against it instead of moto
+#   make local-down    stop it
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    container_name: llm-gateway-dynamodb
+    command: -jar DynamoDBLocal.jar -inMemory -sharedDb -port 8000
+    ports:
+      - "8000:8000"
+    working_dir: /home/dynamodblocal
+    # No healthcheck: the image has no curl or wget, and a shell-based TCP probe
+    # is fragile. `scripts/local_setup.py` polls the API itself, which is a
+    # truer readiness signal anyway — it waits for DynamoDB to answer, not for
+    # a port to open.
+
+#
+# volumes:
+#   - ./.dynamodb-data:/data
